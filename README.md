@@ -103,10 +103,11 @@ python main.py --city "Amsterdam" --custom-style my_style.json --output amsterda
 ```
 
 ### Examples (Imgs)
-<img width="300" height="400" alt="Moscow" src="https://github.com/user-attachments/assets/68b9e1f9-c032-46a5-bcaf-f64414352555" />
-<img width="300" height="400" alt="London" src="https://github.com/user-attachments/assets/1c39cd87-4b19-49d8-9db8-37e67d4190ba" />
-<img width="300" height="400" alt="MAI1" src="https://github.com/user-attachments/assets/a4b71276-1bf7-48d6-99de-62f2f76e93fc" />
-<img width="311" height="241" alt="paris_pastel" src="https://github.com/user-attachments/assets/00371a65-d768-4218-a995-113d644d41d8" />
+<img width="300" height="400" alt="Moscow" src="https://github.com/user-attachments/assets/48491107-1862-43c2-88f2-fe4696804c5c" />
+<img width="300" height="400" alt="London" src="https://github.com/user-attachments/assets/6b67c800-a31a-4af8-97ea-dd3bbaaae11e" />
+<img width="300" height="400" alt="MAI1" src="https://github.com/user-attachments/assets/89e33cdc-1e87-4a84-9708-9b87751c1b8f" />
+<img width="300" height="400" alt="Paris" src="https://github.com/user-attachments/assets/092d3de5-e5d4-40b1-ad3d-da42f2d98e0c" />
+
 
 
 ## Built-in Styles
