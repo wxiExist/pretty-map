@@ -9,7 +9,7 @@ class MapStyle:
         self.street_width = 0.5
         self.title_color = '#000000'
         self.subtitle_color = '#666666'
-        self.title_size = 60
+        self.title_size = 56
         self.subtitle_size = 24
         self.draw_water = False
         self.draw_buildings = False
