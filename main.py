@@ -82,6 +82,11 @@ def main():
         action='store_true',
         help='Показать все доступные стили'
     )
+    parser.add_argument(
+        '--export-layers',
+        type=str,
+        help='Экспортировать слои в отдельные PNG файлы (например, --export-layers ./layers/). Создаёт файлы для редактирования в Фотошопе'
+    )
     
     args = parser.parse_args()
     
@@ -123,6 +128,8 @@ def main():
     if args.subtitle:
         print(f"[+]  Подзаголовок: {args.subtitle}")
     print(f"[+] Выходной файл: {args.output}")
+    if args.export_layers:
+        print(f"[+] Экспорт слоёв: {args.export_layers}")
     print()
     
     try:
@@ -136,7 +143,8 @@ def main():
             width=args.size[0],
             height=args.size[1],
             title_text=args.title,
-            subtitle_text=args.subtitle
+            subtitle_text=args.subtitle,
+            export_layers=args.export_layers
         )
         
         print(f"\n[+] Успех! Постер создан: {Path(output_path).absolute()}")

@@ -6,9 +6,11 @@ A Python-based tool for generating beautiful, customizable map posters from Open
 
 - Generate map posters from city names or GPS coordinates
 - 11 built-in visual styles (minimal, blueprint, watercolor, neon, vintage, and more)
-- Custom style support via JSON configuration
+- Custom style support via JSON configuration with full parameter customization
 - Multi-layer rendering: water bodies, buildings, streets
-- Configurable text, colors, and typography
+- Export individual layers as separate PNG files for Photoshop editing
+- Configurable text, colors, typography, and all visual parameters
+- Progress indication with percentage bars during data download and rendering
 - Automatic map simplification for large areas
 - High-resolution output suitable for printing
 
@@ -74,6 +76,7 @@ python main.py --coords 48.8566 2.3522 --style minimal --output paris.png
 - `--output PATH` - Output file path (default: map_poster.png)
 - `--size WIDTH HEIGHT` - Image dimensions in pixels (default: 3000 4000)
 - `--radius METERS` - Map area radius in meters (default: 5000)
+- `--export-layers PATH` - Export individual layers as PNG files to the specified directory for Photoshop editing (e.g., --export-layers ./layers/)
 
 ### Examples
 
@@ -101,6 +104,12 @@ python main.py --city "Venice" --style nightsky --size 2400 3600 --output venice
 ```bash
 python main.py --city "Amsterdam" --custom-style my_style.json --output amsterdam_custom.png
 ```
+
+**Exporting layers for Photoshop editing:**
+```bash
+python main.py --city "Barcelona" --style watercolor --export-layers ./barcelona_layers/
+```
+This creates separate PNG files for water, buildings, and streets with transparency, allowing further editing in Photoshop.
 
 ### Examples (Imgs)
 <img width="300" height="400" alt="Moscow" src="https://github.com/user-attachments/assets/48491107-1862-43c2-88f2-fe4696804c5c" />
@@ -133,7 +142,7 @@ python main.py --list-styles
 
 ## Custom Styles
 
-Create your own visual style using a JSON configuration file.
+Create your own visual style using a JSON configuration file. All parameters are optional and can be freely customized.
 
 ### Custom Style Format
 
@@ -165,34 +174,34 @@ All parameters are optional. Unspecified values inherit from the base style.
 }
 ```
 
-### Parameter Reference
+### Parameter Reference - Complete Customization
 
-**Colors and Streets:**
-- `bg_color` - Background color (hex code)
+**Background and Streets:**
+- `bg_color` - Background color (hex code, e.g., #ffffff, #1e1e1e)
 - `street_color` - Street line color (hex code)
-- `street_width` - Street line thickness (float, typical: 0.3-1.5)
+- `street_width` - Street line thickness in pixels (float, typical: 0.3-1.5)
 
-**Typography:**
+**Typography - Full Control:**
 - `title_color` - Main title text color (hex code)
+- `title_size` - Title font size in points (int, typical: 50-80)
 - `subtitle_color` - Subtitle text color (hex code)
-- `title_size` - Title font size (int, typical: 50-80)
-- `subtitle_size` - Subtitle font size (int, typical: 20-30)
+- `subtitle_size` - Subtitle font size in points (int, typical: 20-30)
 
-**Water Features:**
-- `draw_water` - Enable water layer rendering (boolean)
+**Water Features - Customizable:**
+- `draw_water` - Enable water layer rendering (boolean: true/false)
 - `water_color` - Water body fill color (hex code)
-- `water_alpha` - Water transparency (float, 0.0-1.0)
+- `water_alpha` - Water transparency level (float from 0.0 to 1.0, where 0.0 is transparent, 1.0 is opaque)
 
-**Buildings:**
-- `draw_buildings` - Enable building footprints (boolean)
+**Building Footprints - Customizable:**
+- `draw_buildings` - Enable building footprints layer (boolean: true/false)
 - `building_color` - Building fill color (hex code)
-- `building_alpha` - Building transparency (float, 0.0-1.0)
+- `building_alpha` - Building transparency level (float from 0.0 to 1.0)
 
-**Title Box (deprecated, recommend keeping false):**
-- `title_box` - Add background behind title text (boolean)
+**Title Box (Optional):**
+- `title_box` - Add colored background behind title text (boolean)
 - `title_box_color` - Title box background color (hex code)
-- `title_box_alpha` - Title box transparency (float, 0.0-1.0)
-- `title_box_height` - Title box height as fraction of image (float, typical: 0.08-0.15)
+- `title_box_alpha` - Title box transparency (float from 0.0 to 1.0)
+- `title_box_height` - Title box height as fraction of image height (float, typical: 0.08-0.15)
 
 ### Using Custom Styles
 
@@ -202,9 +211,73 @@ You can base your custom style on an existing built-in style:
 python main.py --city "Berlin" --custom-style mystyle.json --output berlin.png
 ```
 
-Or specify a base style explicitly in your code by modifying the custom style loading logic.
+### Custom Style Examples
+
+**Example 1: Vibrant Purple with Gold Streets**
+```json
+{
+  "bg_color": "#2d1b4e",
+  "street_color": "#ffd700",
+  "street_width": 0.8,
+  "title_color": "#ffd700",
+  "subtitle_color": "#c0a0f0",
+  "draw_water": true,
+  "water_color": "#4a3a7a",
+  "water_alpha": 0.5,
+  "draw_buildings": true,
+  "building_color": "#5d3f7a",
+  "building_alpha": 0.6
+}
+```
+
+**Example 2: Forest Green with Nature Theme**
+```json
+{
+  "bg_color": "#f5f9f5",
+  "street_color": "#2d5016",
+  "street_width": 0.9,
+  "title_color": "#1b3a0a",
+  "subtitle_color": "#4a7c2f",
+  "draw_water": true,
+  "water_color": "#6db3e8",
+  "water_alpha": 0.7,
+  "draw_buildings": true,
+  "building_color": "#d4e8c1",
+  "building_alpha": 0.8
+}
+```
+
+**Example 3: High Contrast Black & Yellow (Accessibility)**
+```json
+{
+  "bg_color": "#ffffff",
+  "street_color": "#000000",
+  "street_width": 1.2,
+  "title_color": "#ffcc00",
+  "subtitle_color": "#000000",
+  "title_size": 72,
+  "subtitle_size": 28,
+  "draw_water": true,
+  "water_color": "#0066ff",
+  "water_alpha": 0.8,
+  "draw_buildings": true,
+  "building_color": "#cccccc",
+  "building_alpha": 0.9
+}
+```
 
 See `example_custom_style.json` for a complete template.
+
+## Advanced Customization Guide
+
+For comprehensive documentation on creating and customizing styles, see [CUSTOM_STYLE_GUIDE.md](CUSTOM_STYLE_GUIDE.md).
+
+This guide includes:
+- Complete parameter reference with descriptions
+- Color harmony tips and combinations
+- Real-world style examples (modern blue, earth tones, neon, minimalist, etc.)
+- Troubleshooting common customization issues
+- JSON format notes and best practices
 
 ## Technical Details
 
@@ -216,6 +289,29 @@ All map data is retrieved from OpenStreetMap via the Overpass API using the OSMn
 - Street network extraction
 - Building footprint queries
 - Water body geometry retrieval
+
+### Progress Indication
+
+The tool displays progress bars during:
+- **Data Download**: Shows steps for coordinate geocoding and network data retrieval
+- **Poster Creation**: Shows steps for layer loading, rendering water, buildings, streets, and final save
+
+This helps you track long operations on large map areas.
+
+### Layer Export
+
+When using `--export-layers`, the tool creates separate PNG files for each rendered layer:
+
+- **water.png** - Water bodies with alpha transparency
+- **buildings.png** - Building footprints with alpha transparency  
+- **streets.png** - Street network with alpha transparency
+- **map_poster.png** - Final composite (in same output directory)
+
+All layer files use transparent backgrounds, making them perfect for:
+- Importing into Photoshop or Illustrator for further editing
+- Selective layer visibility toggling
+- Color adjustment per layer
+- Custom composition and effects
 
 ### Map Simplification
 
@@ -238,6 +334,7 @@ Generated images are saved as PNG files with:
 - Customizable dimensions via `--size` argument
 - 7% top margin for title text
 - 93% main map area
+- Optional separate layer exports with transparency
 
 ### Network Errors
 

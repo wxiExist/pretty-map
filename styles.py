@@ -2,21 +2,50 @@ import json
 from pathlib import Path
 
 class MapStyle:
+    """
+    Base map style class with complete customization options.
+    
+    All attributes can be overridden in custom JSON files or subclasses.
+    
+    Color attributes accept hex color codes (#RRGGBB or #RGB)
+    Alpha attributes are floats from 0.0 (fully transparent) to 1.0 (fully opaque)
+    Font sizes are integers in points
+    Widths are floats in pixels
+    
+    Customization Examples:
+    - Change all colors for your theme
+    - Adjust font sizes and thicknesses
+    - Toggle water and building layers
+    - Create high-contrast or pastel variations
+    """
 
     def __init__(self):
+        # Background
         self.bg_color = '#ffffff'
+        
+        # Streets
         self.street_color = '#000000'
         self.street_width = 0.5
+        
+        # Text - Title
         self.title_color = '#000000'
-        self.subtitle_color = '#666666'
         self.title_size = 56
+        
+        # Text - Subtitle
+        self.subtitle_color = '#666666'
         self.subtitle_size = 24
+        
+        # Water features
         self.draw_water = False
-        self.draw_buildings = False
         self.water_color = '#a0c8ff'
         self.water_alpha = 0.35
+        
+        # Buildings
+        self.draw_buildings = False
         self.building_color = '#c7c7c7'
         self.building_alpha = 0.5
+        
+        # Title box (optional background behind text)
         self.title_box = False
         self.title_box_color = '#000000'
         self.title_box_alpha = 0.22
