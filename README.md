@@ -9,7 +9,7 @@ A Python-based tool for generating beautiful, customizable map posters from Open
 <img width="300" height="400" alt="paris_borderless-test" src="https://github.com/user-attachments/assets/6a68ffa0-8337-42d0-9224-d05fe5dd84d5" />
 <img width="300" height="400" alt="paris_NEO" src="https://github.com/user-attachments/assets/4053367f-517e-43ef-bc50-28213efea80b" />
 
-- for the last two posters ``` python main.py --city "Paris" --custom-style green-neon.json --borderless --output paris_NEON.png --title "Paris" --radius 6500 --subtitle "France" ```
+- for the last poster ``` python main.py --city "Paris" --custom-style green-neon.json --borderless --output paris_NEON.png --title "Paris" --radius 6500 --subtitle "France" ```
 
 
 
