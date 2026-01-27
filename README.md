@@ -19,6 +19,7 @@ A Python-based tool for generating beautiful, customizable map posters from Open
 - 11 built-in visual styles (minimal, blueprint, watercolor, neon, vintage, and more)
 - Custom style support via JSON configuration with full parameter customization
 - Multi-layer rendering: water bodies, buildings, streets
+- **Borderless mode**: map fades to background at edges with text placed at bottom
 - Export in PNG or SVG format (scalable vector graphics)
 - Export individual layers as separate PNG files for Photoshop editing
 - Configurable text, colors, typography, and all visual parameters
@@ -89,6 +90,7 @@ python main.py --coords 48.8566 2.3522 --style minimal --output paris.png
 - `--size WIDTH HEIGHT` - Image dimensions in pixels (default: 3000 4000)
 - `--radius METERS` - Map area radius in meters (default: 5000)
 - `--format FORMAT` - Output format: png or svg (default: png)
+- `--borderless` - Borderless mode: map fades to background at edges, text placed at bottom
 - `--export-layers PATH` - Export individual layers as PNG files to the specified directory for Photoshop editing (e.g., --export-layers ./layers/)
 
 ### Examples
@@ -132,6 +134,16 @@ python main.py --city "Rome" --style minimal --format svg --output rome.svg
 **SVG with custom style:**
 ```bash
 python main.py --coords 40.7128 -74.0060 --style blueprint --format svg --output nyc.svg
+```
+
+**Borderless mode (fade to background, text at bottom):**
+```bash
+python main.py --city "Tokyo" --style minimal --borderless --output tokyo_borderless.png
+```
+
+**Borderless with custom style:**
+```bash
+python main.py --city "Paris" --style watercolor --borderless --title "PARIS" --subtitle "City of Light" --output paris_borderless.png
 ```
 
 
@@ -385,6 +397,13 @@ map/
 - Keep titles short (1-2 words) for best visual impact
 - Use subtitles for coordinates, dates, or additional context
 - Leave subtitle empty for minimalist designs
+- Try `--borderless` for modern, edge-to-edge aesthetic with bottom-placed text
+
+**Borderless Mode:**
+- Perfect for modern, frameless prints
+- Map smoothly fades to background color at edges (15% fade zone)
+- Text automatically positioned at bottom for better composition
+- Combines well with minimal or dark styles for contemporary look
 
 **Performance:**
 - Large radius values (>10km) may take several minutes to process
