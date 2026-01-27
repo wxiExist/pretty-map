@@ -235,7 +235,7 @@ python main.py --city "Berlin" --custom-style mystyle.json --output berlin.png
   "subtitle_color": "#c0a0f0",
   "draw_water": true,
   "water_color": "#4a3a7a",
-  "water_alpha": 0.5,
+  "water_alpha": 0.6,
   "draw_buildings": true,
   "building_color": "#5d3f7a",
   "building_alpha": 0.6
