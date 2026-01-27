@@ -280,16 +280,6 @@ python main.py --city "Berlin" --custom-style mystyle.json --output berlin.png
 
 See `example_custom_style.json` for a complete template.
 
-## Advanced Customization Guide
-
-For comprehensive documentation on creating and customizing styles, see [CUSTOM_STYLE_GUIDE.md](CUSTOM_STYLE_GUIDE.md).
-
-This guide includes:
-- Complete parameter reference with descriptions
-- Color harmony tips and combinations
-- Real-world style examples (modern blue, earth tones, neon, minimalist, etc.)
-- Troubleshooting common customization issues
-- JSON format notes and best practices
 
 ## Technical Details
 
