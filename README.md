@@ -2,14 +2,12 @@
 A Python-based tool for generating beautiful, customizable map posters from OpenStreetMap data. Create stunning wall art featuring city maps with multiple visual styles, including building footprints, water features, and road networks.
 
 ### Examples
+<img width="300" height="400" alt="Berlin-neon" src="https://github.com/user-attachments/assets/9f41d530-a601-4076-a12a-decb4437deef" />
+<img width="300" height="400" alt="paris_NEO" src="https://github.com/user-attachments/assets/4053367f-517e-43ef-bc50-28213efea80b" />
 <img width="300" height="400" alt="Moscow" src="https://github.com/user-attachments/assets/48491107-1862-43c2-88f2-fe4696804c5c" />
 <img width="300" height="400" alt="London" src="https://github.com/user-attachments/assets/6b67c800-a31a-4af8-97ea-dd3bbaaae11e" />
 <img width="300" height="400" alt="MAI1" src="https://github.com/user-attachments/assets/89e33cdc-1e87-4a84-9708-9b87751c1b8f" />
 <img width="300" height="400" alt="Paris" src="https://github.com/user-attachments/assets/092d3de5-e5d4-40b1-ad3d-da42f2d98e0c" />
-<img width="300" height="400" alt="Berlin-neon" src="https://github.com/user-attachments/assets/9f41d530-a601-4076-a12a-decb4437deef" />
-<img width="300" height="400" alt="paris_NEO" src="https://github.com/user-attachments/assets/4053367f-517e-43ef-bc50-28213efea80b" />
-
-- for the last poster ``` python main.py --city "Paris" --custom-style green-neon.json --borderless --output paris_NEON.png --title "Paris" --radius 6500 --subtitle "France" ```
 
 
 
