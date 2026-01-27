@@ -1,0 +1,25 @@
+{
+  "_comment": "Neon map style",
+
+  "bg_color": "#05010a",
+  "street_color": "#00f6ff",
+  "street_width": 1.2,
+
+  "title_color": "#ff2bdc",
+  "subtitle_color": "#8be9ff",
+  "title_size": 65,
+  "subtitle_size": 26,
+
+  "draw_water": true,
+  "water_color": "#0b1c3d",
+  "water_alpha": 0.85,
+
+  "draw_buildings": true,
+  "building_color": "#1a1033",
+  "building_alpha": 0.9,
+
+  "title_box": false,
+  "title_box_color": "#000000",
+  "title_box_alpha": 0.0,
+  "title_box_height": 0.12
+}

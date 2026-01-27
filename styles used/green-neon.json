@@ -1,0 +1,25 @@
+{
+  "_comment": "Neon map style – green sci-fi",
+
+  "bg_color": "#030806",
+  "street_color": "#39ff14",
+  "street_width": 1.2,
+
+  "title_color": "#b6ff00",
+  "subtitle_color": "#6aff8e",
+  "title_size": 65,
+  "subtitle_size": 26,
+
+  "draw_water": true,
+  "water_color": "#06261d",
+  "water_alpha": 0.85,
+
+  "draw_buildings": true,
+  "building_color": "#0f1a14",
+  "building_alpha": 0.9,
+
+  "title_box": false,
+  "title_box_color": "#000000",
+  "title_box_alpha": 0.0,
+  "title_box_height": 0.12
+}
