@@ -5,6 +5,10 @@
 <img width="300" height="400" alt="London" src="https://github.com/user-attachments/assets/6b67c800-a31a-4af8-97ea-dd3bbaaae11e" />
 <img width="300" height="400" alt="MAI1" src="https://github.com/user-attachments/assets/89e33cdc-1e87-4a84-9708-9b87751c1b8f" />
 <img width="300" height="400" alt="Paris" src="https://github.com/user-attachments/assets/092d3de5-e5d4-40b1-ad3d-da42f2d98e0c" />
+<img width="300" height="400" alt="paris_borderless-test" src="https://github.com/user-attachments/assets/6a68ffa0-8337-42d0-9224-d05fe5dd84d5" />
+<img width="300" height="400" alt="Berlin" src="https://github.com/user-attachments/assets/66a6965c-4fe3-45af-a186-06e05469ac2f" />
+
+
 
 
 A Python-based tool for generating beautiful, customizable map posters from OpenStreetMap data. Create stunning wall art featuring city maps with multiple visual styles, including building footprints, water features, and road networks.
