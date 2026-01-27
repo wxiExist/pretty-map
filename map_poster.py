@@ -12,7 +12,7 @@ ox.config(log_console=False, use_cache=True)
 
 
 def print_progress(current, total, label=""):
-    """Выводит прогресс в процентах"""
+    """Displays progress in percentage"""
     if total <= 0:
         return
     progress = (current / total) * 100
@@ -28,8 +28,8 @@ class MapPosterGenerator:
         self.style = style_config
         
     def fetch_map_data(self, location=None, lat=None, lon=None, radius=5000):
-        print(f"Загрузка данных карты...")
-        print_progress(0, 3, "Подготовка координат")
+        print(f"Loading map data...")
+        print_progress(0, 3, "Preparing coordinates")
         if radius > 6000:
             custom_filter = '["highway"~"motorway|trunk|primary|secondary"]'
         else:
@@ -38,14 +38,14 @@ class MapPosterGenerator:
         for attempt in range(max_retries):
             try:
                 if location:
-                    print_progress(1, 3, "Геокодирование")
+                    print_progress(1, 3, "Geocoding")
                     center_lat, center_lon = ox.geocode(location)
                 elif lat is not None and lon is not None:
                     center_lat, center_lon = lat, lon
                 else:
-                    raise ValueError("Необходимо указать либо location, либо координаты (lat, lon)")
+                    raise ValueError("Must specify either location or coordinates (lat, lon)")
                 
-                print_progress(2, 3, "Загрузка данных графа")
+                print_progress(2, 3, "Loading graph data")
                 graph = ox.graph_from_point(
                     (center_lat, center_lon),
                     dist=radius,
@@ -54,7 +54,7 @@ class MapPosterGenerator:
                     custom_filter=custom_filter
                 )
                 
-                print_progress(3, 3, "Завершено")
+                print_progress(3, 3, "Completed")
                 print()
                 
                 if location:
@@ -62,16 +62,16 @@ class MapPosterGenerator:
                 else:
                     place_name = f"{lat:.4f}°, {lon:.4f}°"
                 
-                print(f"✓ Данные загружены: {len(graph.nodes)} узлов, {len(graph.edges)} рёбер")
+                print(f"✓ Data loaded: {len(graph.nodes)} nodes, {len(graph.edges)} edges")
                 return graph, place_name, (center_lat, center_lon)
                 
             except Exception as e:
                 if attempt < max_retries - 1:
-                    print(f"\n⚠️  Ошибка при загрузке (попытка {attempt + 1}/{max_retries}), повтор через 5 сек...")
+                    print(f"\n⚠️  Loading error (attempt {attempt + 1}/{max_retries}), retrying in 5 sec...")
                     import time
                     time.sleep(5)
                 else:
-                    print(f"\nОшибка при загрузке данных: {e}")
+                    print(f"\nData loading error: {e}")
                     raise
     
     def fetch_layers(self, center_lat, center_lon, radius):
@@ -89,7 +89,7 @@ class MapPosterGenerator:
         try:
             gdf = ox.geometries_from_point((center_lat, center_lon), dist=radius, tags=tags)
         except Exception as e:
-            print(f"⚠️  Не удалось загрузить слои зданий/воды: {e}")
+            print(f"⚠️  Failed to load buildings/water layers: {e}")
             return None, None
         buildings = None
         water = None
@@ -102,8 +102,8 @@ class MapPosterGenerator:
     
     def create_poster(self, graph, place_name, output_path, figsize=(12, 16),
                       center_lat=None, center_lon=None, radius=5000,
-                      title_text=None, subtitle_text=None, export_layers=None):
-        print(f"Создание постера...")
+                      title_text=None, subtitle_text=None, export_layers=None, output_format='png'):
+        print(f"Creating poster...")
         title_text = (title_text or place_name).upper()
         subtitle_text = subtitle_text or None
 
@@ -111,13 +111,13 @@ class MapPosterGenerator:
         ax = fig.add_axes([0, 0, 1, 0.93])
         ax.set_facecolor(self.style['bg_color'])
         
-        print_progress(1, 5, "Загрузка слоёв")
+        print_progress(1, 5, "Loading layers")
         buildings, water = self.fetch_layers(center_lat, center_lon, radius)
         
-        # Список слоёв для экспорта
+        # List of layers for export
         layers = {}
         
-        print_progress(2, 5, "Рисование воды")
+        print_progress(2, 5, "Drawing water")
         if water is not None and not water.empty and self.style.get('draw_water'):
             water.plot(ax=ax,
                        facecolor=self.style.get('water_color', '#a0c8ff'),
@@ -130,7 +130,7 @@ class MapPosterGenerator:
                 layers['water'] = (water, self.style.get('water_color', '#a0c8ff'), 
                                  self.style.get('water_alpha', 0.35), figsize)
         
-        print_progress(3, 5, "Рисование зданий")
+        print_progress(3, 5, "Drawing buildings")
         if buildings is not None and not buildings.empty and self.style.get('draw_buildings'):
             buildings.plot(ax=ax,
                            facecolor=self.style.get('building_color', '#c7c7c7'),
@@ -143,7 +143,7 @@ class MapPosterGenerator:
                 layers['buildings'] = (buildings, self.style.get('building_color', '#c7c7c7'), 
                                      self.style.get('building_alpha', 0.5), figsize)
         
-        print_progress(4, 5, "Рисование улиц")
+        print_progress(4, 5, "Drawing streets")
         ox.plot_graph(
             graph,
             ax=ax,
@@ -182,55 +182,65 @@ class MapPosterGenerator:
                 fontfamily='sans-serif'
             )
 
-        print_progress(5, 5, "Сохранение результатов")
-        fig.savefig(
-            output_path,
-            dpi=300,
-            facecolor=self.style['bg_color'],
-            edgecolor='none'
-        )
+        print_progress(5, 5, "Saving results")
+        
+        # Determine save parameters based on format
+        if output_format.lower() == 'svg':
+            fig.savefig(
+                output_path,
+                format='svg',
+                facecolor=self.style['bg_color'],
+                edgecolor='none'
+            )
+        else:
+            fig.savefig(
+                output_path,
+                dpi=300,
+                facecolor=self.style['bg_color'],
+                edgecolor='none'
+            )
         plt.close(fig)
         
         print()
-        print(f"[+] Постер сохранён: {output_path}")
+        print(f"[+] Poster saved: {output_path}")
         
-        # Экспорт слоёв если требуется
+        # Export layers if required
         if export_layers and layers:
             self._export_layers(layers, export_layers, figsize, self.style)
     
     def _export_layers(self, layers, export_dir, figsize, style):
-        """Экспортирует каждый слой в отдельный PNG файл"""
+        """Exports each layer to a separate PNG file"""
         export_path = Path(export_dir)
         export_path.mkdir(parents=True, exist_ok=True)
         
-        print(f"\n[+] Экспорт слоёв в {export_dir}")
+        print(f"\n[+] Exporting layers to {export_dir}")
         
         layer_count = len(layers)
         for idx, (layer_name, layer_data) in enumerate(layers.items(), 1):
-            print_progress(idx, layer_count, f"Экспорт слоя: {layer_name}")
+            print_progress(idx, layer_count, f"Exporting layer: {layer_name}")
             
             data, color, alpha, size = layer_data
             
-            # Создаём новый прозрачный фон для слоя
+            # Create new transparent background for layer
             fig = plt.figure(figsize=size, facecolor='none')
             ax = fig.add_axes([0, 0, 1, 1])
             ax.set_facecolor('none')
             
             try:
                 if layer_name == 'streets':
-                    # Для графа улиц
+                    # For street graph
                     ox.plot_graph(
                         data,
                         ax=ax,
                         node_size=0,
                         edge_color=color,
-                        edge_linewidth=alpha,  # Используем alpha как ширину линии
+                        edge_linewidth=alpha,  # Use alpha as line width
                         bgcolor='none',
                         show=False,
                         close=False
                     )
                 else:
-                    # Для GeoDataFrame (зданий и воды)
+                    # For GeoDataFrame (buildings and water)
                     data.plot(ax=ax,
                              facecolor=color,
                              edgecolor='none',
@@ -238,7 +248,7 @@ class MapPosterGenerator:
                              linewidth=0,
                              markersize=0)
             except Exception as e:
-                print(f"\n⚠️  Не удалось экспортировать слой {layer_name}: {e}")
+                print(f"\n⚠️  Failed to export layer {layer_name}: {e}")
                 plt.close(fig)
                 continue
             
@@ -256,11 +266,11 @@ class MapPosterGenerator:
             plt.close(fig)
         
         print()
-        print(f"[+] Слои экспортированы в {export_path.absolute()}")
+        print(f"[+] Layers exported to {export_path.absolute()}")
     
     def generate(self, location=None, lat=None, lon=None, radius=5000, 
                  output_path='map_poster.png', figsize=(12, 16),
-                 title_text=None, subtitle_text=None, export_layers=None):
+                 title_text=None, subtitle_text=None, export_layers=None, output_format='png'):
 
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -277,7 +287,8 @@ class MapPosterGenerator:
             radius,
             title_text,
             subtitle_text,
-            export_layers
+            export_layers,
+            output_format
         )
         
         return output_path
@@ -285,7 +296,7 @@ class MapPosterGenerator:
 
 def create_map_poster(location=None, lat=None, lon=None, style_config=None,
                      radius=5000, output_path='map_poster.png', width=3000, height=4000,
-                     title_text=None, subtitle_text=None, export_layers=None):
+                     title_text=None, subtitle_text=None, export_layers=None, output_format='png'):
 
     figsize = (width / 300, height / 300)
 
@@ -300,5 +311,6 @@ def create_map_poster(location=None, lat=None, lon=None, style_config=None,
         figsize=figsize,
         title_text=title_text,
         subtitle_text=subtitle_text,
-        export_layers=export_layers
+        export_layers=export_layers,
+        output_format=output_format
     )

@@ -8,6 +8,7 @@ A Python-based tool for generating beautiful, customizable map posters from Open
 - 11 built-in visual styles (minimal, blueprint, watercolor, neon, vintage, and more)
 - Custom style support via JSON configuration with full parameter customization
 - Multi-layer rendering: water bodies, buildings, streets
+- Export in PNG or SVG format (scalable vector graphics)
 - Export individual layers as separate PNG files for Photoshop editing
 - Configurable text, colors, typography, and all visual parameters
 - Progress indication with percentage bars during data download and rendering
@@ -76,6 +77,7 @@ python main.py --coords 48.8566 2.3522 --style minimal --output paris.png
 - `--output PATH` - Output file path (default: map_poster.png)
 - `--size WIDTH HEIGHT` - Image dimensions in pixels (default: 3000 4000)
 - `--radius METERS` - Map area radius in meters (default: 5000)
+- `--format FORMAT` - Output format: png or svg (default: png)
 - `--export-layers PATH` - Export individual layers as PNG files to the specified directory for Photoshop editing (e.g., --export-layers ./layers/)
 
 ### Examples
@@ -110,6 +112,16 @@ python main.py --city "Amsterdam" --custom-style my_style.json --output amsterda
 python main.py --city "Barcelona" --style watercolor --export-layers ./barcelona_layers/
 ```
 This creates separate PNG files for water, buildings, and streets with transparency, allowing further editing in Photoshop.
+
+**SVG vector export (scalable and editable):**
+```bash
+python main.py --city "Rome" --style minimal --format svg --output rome.svg
+```
+
+**SVG with custom style:**
+```bash
+python main.py --coords 40.7128 -74.0060 --style blueprint --format svg --output nyc.svg
+```
 
 ### Examples (Imgs)
 <img width="300" height="400" alt="Moscow" src="https://github.com/user-attachments/assets/48491107-1862-43c2-88f2-fe4696804c5c" />
@@ -329,12 +341,22 @@ Posters are rendered in layers from bottom to top:
 
 ### Output Format
 
+**PNG Format (default):**
 Generated images are saved as PNG files with:
 - Default resolution: 3000x4000 pixels
+- High DPI (300) suitable for printing
 - Customizable dimensions via `--size` argument
 - 7% top margin for title text
 - 93% main map area
 - Optional separate layer exports with transparency
+
+**SVG Format (vector):**
+When using `--format svg`, posters are exported as scalable vector graphics:
+- Infinitely scalable without quality loss
+- Editable text and paths in vector editors (Illustrator, Inkscape, etc.)
+- Smaller file size for simple maps
+- Perfect for professional printing and design work
+- No DPI setting required (resolution-independent)
 
 ### Network Errors
 
