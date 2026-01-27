@@ -1,7 +1,8 @@
 # Pretty Map
 
 A Python-based tool for generating beautiful, customizable map posters from OpenStreetMap data. Create stunning wall art featuring city maps with multiple visual styles, including building footprints, water features, and road networks.
---
+
+
 <img width="300" height="400" alt="Moscow" src="https://github.com/user-attachments/assets/48491107-1862-43c2-88f2-fe4696804c5c" />
 <img width="300" height="400" alt="London" src="https://github.com/user-attachments/assets/6b67c800-a31a-4af8-97ea-dd3bbaaae11e" />
 <img width="300" height="400" alt="MAI1" src="https://github.com/user-attachments/assets/89e33cdc-1e87-4a84-9708-9b87751c1b8f" />
