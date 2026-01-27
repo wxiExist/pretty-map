@@ -95,6 +95,11 @@ Available styles: minimal, blueprint, watercolor, dark, vintage, neon
         type=str,
         help='Export layers as separate PNG files (e.g., --export-layers ./layers/). Creates files for Photoshop editing'
     )
+    parser.add_argument(
+        '--borderless',
+        action='store_true',
+        help='Borderless mode: map fades to background at edges, text placed at bottom'
+    )
     
     args = parser.parse_args()
     
@@ -132,6 +137,8 @@ Available styles: minimal, blueprint, watercolor, dark, vintage, neon
     print(f"[+] Size: {args.size[0]}x{args.size[1]} pixels")
     print(f"[+] Radius: {args.radius} meters")
     print(f"[+] Format: {args.format}")
+    if args.borderless:
+        print(f"[+] Mode: Borderless (fade edges, bottom text)")
     if args.title:
         print(f"[+] Title: {args.title}")
     if args.subtitle:
@@ -154,7 +161,8 @@ Available styles: minimal, blueprint, watercolor, dark, vintage, neon
             title_text=args.title,
             subtitle_text=args.subtitle,
             export_layers=args.export_layers,
-            output_format=args.format
+            output_format=args.format,
+            borderless=args.borderless
         )
         
         print(f"\n[+] Success! Poster created: {Path(output_path).absolute()}")

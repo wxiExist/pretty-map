@@ -12,7 +12,6 @@ ox.config(log_console=False, use_cache=True)
 
 
 def print_progress(current, total, label=""):
-    """Displays progress in percentage"""
     if total <= 0:
         return
     progress = (current / total) * 100
@@ -102,19 +101,23 @@ class MapPosterGenerator:
     
     def create_poster(self, graph, place_name, output_path, figsize=(12, 16),
                       center_lat=None, center_lon=None, radius=5000,
-                      title_text=None, subtitle_text=None, export_layers=None, output_format='png'):
+                      title_text=None, subtitle_text=None, export_layers=None, output_format='png', borderless=False):
         print(f"Creating poster...")
         title_text = (title_text or place_name).upper()
         subtitle_text = subtitle_text or None
 
         fig = plt.figure(figsize=figsize, facecolor=self.style['bg_color'])
-        ax = fig.add_axes([0, 0, 1, 0.93])
+        
+        if borderless:
+            ax = fig.add_axes([0, 0, 1, 1])
+        else:
+            ax = fig.add_axes([0, 0, 1, 0.93])
+        
         ax.set_facecolor(self.style['bg_color'])
         
         print_progress(1, 5, "Loading layers")
         buildings, water = self.fetch_layers(center_lat, center_lon, radius)
         
-        # List of layers for export
         layers = {}
         
         print_progress(2, 5, "Drawing water")
@@ -160,31 +163,91 @@ class MapPosterGenerator:
         
         ax.axis('off')
         ax.margins(0)
-        fig.text(
-            0.5, 0.96,
-            title_text,
-            ha='center',
-            va='top',
-            fontsize=self.style['title_size'],
-            color=self.style['title_color'],
-            fontweight='bold',
-            fontfamily='sans-serif'
-        )
-
-        if subtitle_text:
+        
+        if borderless:
+            from matplotlib.patches import Rectangle
+            from matplotlib.colors import LinearSegmentedColormap
+            
+            fade_size = 0.24
+            bg_color = self.style['bg_color']
+            steps = 40
+            
+            for i in range(steps):
+                alpha = (i / steps) ** 1.8
+                rect = Rectangle((0, 1-fade_size + (i/steps)*fade_size), 1, fade_size/steps,
+                               transform=ax.transAxes, zorder=100,
+                               facecolor=bg_color, alpha=alpha, edgecolor='none')
+                ax.add_patch(rect)
+            
+            for i in range(steps):
+                alpha = ((steps - i) / steps) ** 1.8
+                rect = Rectangle((0, (i/steps)*fade_size), 1, fade_size/steps,
+                               transform=ax.transAxes, zorder=100,
+                               facecolor=bg_color, alpha=alpha, edgecolor='none')
+                ax.add_patch(rect)
+            
+            for i in range(steps):
+                alpha = ((steps - i) / steps) ** 1.8
+                rect = Rectangle(((i/steps)*fade_size, 0), fade_size/steps, 1,
+                               transform=ax.transAxes, zorder=100,
+                               facecolor=bg_color, alpha=alpha, edgecolor='none')
+                ax.add_patch(rect)
+            
+            for i in range(steps):
+                alpha = (i / steps) ** 1.8
+                rect = Rectangle((1-fade_size + (i/steps)*fade_size, 0), fade_size/steps, 1,
+                               transform=ax.transAxes, zorder=100,
+                               facecolor=bg_color, alpha=alpha, edgecolor='none')
+                ax.add_patch(rect)
+            
             fig.text(
-                0.5, 0.92,
-                subtitle_text,
+                0.5, 0.05,
+                title_text,
+                ha='center',
+                va='bottom',
+                fontsize=self.style['title_size'],
+                color=self.style['title_color'],
+                fontweight='bold',
+                fontfamily='sans-serif',
+                zorder=101
+            )
+            
+            if subtitle_text:
+                fig.text(
+                    0.5, 0.02,
+                    subtitle_text,
+                    ha='center',
+                    va='bottom',
+                    fontsize=self.style['subtitle_size'],
+                    color=self.style['subtitle_color'],
+                    fontfamily='sans-serif',
+                    zorder=101
+                )
+        else:
+            fig.text(
+                0.5, 0.96,
+                title_text,
                 ha='center',
                 va='top',
-                fontsize=self.style['subtitle_size'],
-                color=self.style['subtitle_color'],
+                fontsize=self.style['title_size'],
+                color=self.style['title_color'],
+                fontweight='bold',
                 fontfamily='sans-serif'
             )
 
+            if subtitle_text:
+                fig.text(
+                    0.5, 0.92,
+                    subtitle_text,
+                    ha='center',
+                    va='top',
+                    fontsize=self.style['subtitle_size'],
+                    color=self.style['subtitle_color'],
+                    fontfamily='sans-serif'
+                )
+
         print_progress(5, 5, "Saving results")
         
-        # Determine save parameters based on format
         if output_format.lower() == 'svg':
             fig.savefig(
                 output_path,
@@ -204,12 +267,10 @@ class MapPosterGenerator:
         print()
         print(f"[+] Poster saved: {output_path}")
         
-        # Export layers if required
         if export_layers and layers:
             self._export_layers(layers, export_layers, figsize, self.style)
     
     def _export_layers(self, layers, export_dir, figsize, style):
-        """Exports each layer to a separate PNG file"""
         export_path = Path(export_dir)
         export_path.mkdir(parents=True, exist_ok=True)
         
@@ -221,26 +282,23 @@ class MapPosterGenerator:
             
             data, color, alpha, size = layer_data
             
-            # Create new transparent background for layer
             fig = plt.figure(figsize=size, facecolor='none')
             ax = fig.add_axes([0, 0, 1, 1])
             ax.set_facecolor('none')
             
             try:
                 if layer_name == 'streets':
-                    # For street graph
                     ox.plot_graph(
                         data,
                         ax=ax,
                         node_size=0,
                         edge_color=color,
-                        edge_linewidth=alpha,  # Use alpha as line width
+                        edge_linewidth=alpha,
                         bgcolor='none',
                         show=False,
                         close=False
                     )
                 else:
-                    # For GeoDataFrame (buildings and water)
                     data.plot(ax=ax,
                              facecolor=color,
                              edgecolor='none',
@@ -270,7 +328,7 @@ class MapPosterGenerator:
     
     def generate(self, location=None, lat=None, lon=None, radius=5000, 
                  output_path='map_poster.png', figsize=(12, 16),
-                 title_text=None, subtitle_text=None, export_layers=None, output_format='png'):
+                 title_text=None, subtitle_text=None, export_layers=None, output_format='png', borderless=False):
 
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -288,7 +346,8 @@ class MapPosterGenerator:
             title_text,
             subtitle_text,
             export_layers,
-            output_format
+            output_format,
+            borderless
         )
         
         return output_path
@@ -296,7 +355,7 @@ class MapPosterGenerator:
 
 def create_map_poster(location=None, lat=None, lon=None, style_config=None,
                      radius=5000, output_path='map_poster.png', width=3000, height=4000,
-                     title_text=None, subtitle_text=None, export_layers=None, output_format='png'):
+                     title_text=None, subtitle_text=None, export_layers=None, output_format='png', borderless=False):
 
     figsize = (width / 300, height / 300)
 
@@ -312,5 +371,6 @@ def create_map_poster(location=None, lat=None, lon=None, style_config=None,
         title_text=title_text,
         subtitle_text=subtitle_text,
         export_layers=export_layers,
-        output_format=output_format
+        output_format=output_format,
+        borderless=borderless
     )
