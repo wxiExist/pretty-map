@@ -198,7 +198,7 @@ All parameters are optional. Unspecified values inherit from the base style.
   
   "title_box": false,
   "title_box_color": "#ffffff",
-  "title_box_alpha": 0.65,
+  "title_box_alpha": 0.55,
   "title_box_height": 0.12
 }
 ```
